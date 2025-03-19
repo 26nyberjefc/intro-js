@@ -60,28 +60,25 @@ function garagePath() {
     console.log("\nYou are now inside the garage. It smells horrible and it's crowded with all of your stuff.");
     let action = prompt("Do you want to search the garage, open the garage, or go to the house? ");
 
-
     if (action.toLowerCase() === "search") {
-        console.log("You move navigate around the garage and look around. . . You spot something inside a box!");
-
-        let gambling = true
-        let mysteryBox = 1
-        while (gambling) { // Checks for if the player would like to keep checking the box. It will explode if they are unlucky.
-            mysteryBox = Math.random();
+        console.log("You navigate around the garage and look around... You spot something inside a box!");
+        
+        let gambling = true;
+        while (gambling) { 
+            let mysteryBox = Math.random();
             if (mysteryBox < 0.75) {
                 inventory.push("Shiny Coin");
                 console.log("You found a Shiny Coin!");
+            } else {
+                console.log("You found a broken lighter! It ignites and sets you and the whole house ablaze!");
+                gameOver = true;
+                gambling = false;
+            }
 
-            }
-            else {
-                console.log("You found a broken lighter! It ignites and sets you and the whole house ablaze!")
-                gameOver = true
-                gambling = false
-            }
             if (gambling) {
-                let action = prompt("There's something else inside! Would you like to keep looking? ");
-                if (action.toLowerCase() === "no") {
-                    gambling = false
+                let keepLooking = prompt("There's something else inside! Would you like to keep looking? ");
+                if (keepLooking.toLowerCase() === "no") {
+                    gambling = false;
                 }
             }
         }
@@ -89,47 +86,51 @@ function garagePath() {
         console.log("You decide to head back into your house.");
         location = "house"; // Move to house
     } else if (action.toLowerCase() === "open") {
-        console.log("You open the garage door and go outside.")
-        location = "outside";
+        console.log("You open the garage door and go outside.");
+        location = "outside"; // Move outside
     } else {
         console.log("Invalid action! Please choose 'search', 'house', or 'open'.");
     }
-    
 }
 function outsidePath() {
-    console.log("\nYou open the garage and you are now outside. The neighborhood is busy as usual, but there's no sign of Flopsy. There is, however, a mysterious vending machine on your driveway.")
-    let action = prompt("Do you want to investigate the vending machine, go back inside, or look in the garden? ")
+    console.log("\nYou open the garage and you are now outside. The neighborhood is busy as usual, but there's no sign of Flopsy. There is, however, a mysterious vending machine on your driveway.");
 
-    if (action.toLowerCase() === "investigate") {
-        console.log("The vending machine seems to require a coin.")
-            action = prompt("Do you want to activate it? ")
-                if (action.toLowerCase === "yes") {
+    // Ask the player what they want to do outside
+    let action = prompt("Do you want to investigate the vending machine, go back inside, or look in the garden? ").toLowerCase();
 
-                    if (inventory.includes("Shiny Coin")) {
-                        console.log("The Shiny Coin was used!")
-                        inventory = inventory.filter(item => item !== "Shiny Coin");
-                        console.log("You got a Lopsy Magnet!")
-                        inventory.push("Flopsy Magnet")
-                    } else {
-                        console.log("You do not have any coins.")
-                    }
-                } else if (action.toLowerCase === "no") {
-                    console.log("You decide to not activate the vending machine.")
+    if (action === "investigate") {
+        console.log("The vending machine seems to require a coin.");
+
+        // Loop to ensure valid input (yes or no)
+        let activate = "";
+        while (activate !== "yes" && activate !== "no") {
+            activate = prompt("Do you want to activate it? (yes/no) ").toLowerCase();
+
+            if (activate === "yes") {
+                if (inventory.includes("Shiny Coin")) {
+                    console.log("The Shiny Coin was used!");
+                    inventory = inventory.filter(item => item !== "Shiny Coin");
+                    console.log("You got a Lopsy Magnet!");
+                    inventory.push("Flopsy Magnet");
                 } else {
-                    console.log("Invalid action! Please choose 'yes,' or 'no'")
+                    console.log("You do not have any coins.");
                 }
-    } else if (action.toLowerCase() === "back") {
-        console.log("You go back into the garage.")
-        location = "garage"; 
-    } else if (action.toLowerCase() === "garden") {
-        console.log("You decide to go into the garden.")
-        location = "garden";
+            } else if (activate === "no") {
+                console.log("You decide to not activate the vending machine.");
+            } else {
+                console.log("Invalid input. Please enter 'yes' or 'no'.");
+            }
+        }
+    } else if (action === "back") {
+        console.log("You go back into the garage.");
+        location = "garage"; // Update location to "garage"
+    } else if (action === "garden") {
+        console.log("You decide to go into the garden.");
+        location = "garden"; // Update location to "garden"
     } else {
-        console.log("Invalid action! Please choose 'investigate,' 'back,' or 'garden.'")
+        console.log("Invalid action! Please choose 'investigate,' 'back,' or 'garden.'");
     }
 }
-
-
 function gardenPath() {
     if (inventory.includes("Flopsy Magnet")) {
         console.log("As you enter the garden, Flopsy flies right into your Flopsy Magnet! You found Flopsy!")
